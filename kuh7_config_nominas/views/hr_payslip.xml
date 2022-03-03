@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+       <!-- Inherit Form View to Modify it -->
+       <record id="view_hr_payslip_config_payslip_kuh7" model="ir.ui.view">
+           <field name="name">view.hr.payslip.config.pyslips.kuh7</field>
+           <field name="model">hr.payslip</field>
+           <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_form"/>
+           <field name="arch" type="xml">
+
+               <xpath expr="//field[@name='credit_note']" position="after">
+                   <field name="first_payroll_worker"/>
+               </xpath>
+           </field>
+       </record>
+
+    </data>
+</odoo>
