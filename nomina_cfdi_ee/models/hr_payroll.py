@@ -326,6 +326,8 @@ class HrPayslip(models.Model):
             inc_days = 0
             vac_days = 0
             factor = 0
+            proporcional = 0
+            falta_days = 0
             if contract.semana_inglesa:
                 factor = 7.0/5.0
             else:
@@ -357,56 +359,20 @@ class HrPayslip(models.Model):
                     tz.localize(datetime.datetime.combine(day, datetime.time.max)),
                     compute_leaves=False,
                 )
-                if work_hours and contract.septimo_dia:
+                if work_hours:
+                    if holiday.holiday_status_id.name == 'FJS' or holiday.holiday_status_id.name == 'FI' or holiday.holiday_status_id.name == 'FR':
+                        falta_days += 1
+                        if contract.septimo_dia:
+                            proporcional += (hours / work_hours) * factor
+                    elif holiday.holiday_status_id.name == 'INC_EG' or holiday.holiday_status_id.name == 'INC_RT' or holiday.holiday_status_id.name == 'INC_MAT':
                         if contract.incapa_sept_dia:
-                           if holiday.holiday_status_id.name == 'FJS' or holiday.holiday_status_id.name == 'FI' or holiday.holiday_status_id.name == 'FR':
-                              leave_days += (hours / work_hours)*factor
-                              current_leave_struct['number_of_days'] += (hours / work_hours)*factor
-                              if leave_days > dias_pagar:
-                                 leave_days = dias_pagar
-                              if current_leave_struct['number_of_days'] > dias_pagar:
-                                 current_leave_struct['number_of_days'] = dias_pagar
-                           elif holiday.holiday_status_id.name == 'INC_EG' or holiday.holiday_status_id.name == 'INC_RT' or holiday.holiday_status_id.name == 'INC_MAT':
-                              leave_days += hours / work_hours
-                              inc_days += 1
-                              current_leave_struct['number_of_days'] += hours / work_hours
-                           else:
-                              if holiday.holiday_status_id.name != 'DFES' and holiday.holiday_status_id.name != 'DFES_3':
-                                 leave_days += hours / work_hours
-                              current_leave_struct['number_of_days'] += hours / work_hours
-                              if holiday.holiday_status_id.name == 'VAC' or holiday.holiday_status_id.name == 'FJC':
-                                 vac_days += 1
-                        else:
-                           if holiday.holiday_status_id.name == 'FJS' or holiday.holiday_status_id.name == 'FI' or holiday.holiday_status_id.name == 'FR':
-                              leave_days += (hours / work_hours)*factor
-                              current_leave_struct['number_of_days'] += (hours / work_hours)*factor
-                              if leave_days > dias_pagar:
-                                 leave_days = dias_pagar
-                              if current_leave_struct['number_of_days'] > dias_pagar:
-                                 current_leave_struct['number_of_days'] = dias_pagar
-                           else:
-                              if holiday.holiday_status_id.name != 'DFES' and holiday.holiday_status_id.name != 'DFES_3':
-                                 leave_days += hours / work_hours
-                              current_leave_struct['number_of_days'] += hours / work_hours
-                              if holiday.holiday_status_id.name == 'VAC' or holiday.holiday_status_id.name == 'FJC':
-                                 vac_days += 1
-                elif work_hours:
-                        if contract.incapa_sept_dia:
-                           if holiday.holiday_status_id.name == 'INC_EG' or holiday.holiday_status_id.name == 'INC_RT' or holiday.holiday_status_id.name == 'INC_MAT':
-                              leave_days += (hours / work_hours)*factor
-                              current_leave_struct['number_of_days'] += (hours / work_hours)*factor
-                           else:
-                              if holiday.holiday_status_id.name != 'DFES' and holiday.holiday_status_id.name != 'DFES_3':
-                                 leave_days += hours / work_hours
-                              current_leave_struct['number_of_days'] += hours / work_hours
-                              if holiday.holiday_status_id.name == 'VAC' or holiday.holiday_status_id.name == 'FJC':
-                                 vac_days += 1
-                        else:
-                           if holiday.holiday_status_id.name != 'DFES' and holiday.holiday_status_id.name != 'DFES_3':
-                              leave_days += hours / work_hours
-                           current_leave_struct['number_of_days'] += hours / work_hours
-                           if holiday.holiday_status_id.name == 'VAC' or holiday.holiday_status_id.name == 'FJC':
-                              vac_days += 1
+                            inc_days += 1
+                    elif holiday.holiday_status_id.name == 'VAC' or holiday.holiday_status_id.name == 'FJC':
+                        vac_days += 1
+                    if holiday.holiday_status_id.name != 'DFES' and holiday.holiday_status_id.name != 'DFES_3':
+                        leave_days += hours / work_hours
+                    current_leave_struct['number_of_days'] += hours / work_hours
+                    current_leave_struct['number_of_hours'] += hours
 
             # compute worked days
             work_data = contract.employee_id._get_work_days_data(day_from, day_to, calendar=contract.resource_calendar_id)
@@ -536,6 +502,11 @@ class HrPayslip(models.Model):
                           'contract_id': contract.id,
                       }
                       res.append(attendances)
+                      if falta_days >= 6 or inc_days >= 6 or vac_days >= 6:
+                         number_of_days = 0
+                   else:
+                      if falta_days >= 6 or inc_days >= 6 or vac_days >= 6:
+                         number_of_days = 0
                #calculo para nóminas mensuales
                elif contract.periodicidad_pago == '05':
                   if contract.tipo_pago == '01':
@@ -613,7 +584,7 @@ class HrPayslip(models.Model):
                 res.append(attendances)
                 
             res.extend(leaves.values())
-        
+
         return res
 
    # @api.onchange('contract_id')
