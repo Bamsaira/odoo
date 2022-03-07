@@ -7,7 +7,7 @@
     """,
     'website': 'https://www.kuh7.mx/',
     'author': 'KUH7 SOLUCIONES S.A. DE C.V.',
-    'version': '1.6',
+    'version': '2.0',
     'category': 'Tools',
     'depends': [
         'sale',

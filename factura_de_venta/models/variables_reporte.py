@@ -3,13 +3,18 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from datetime import datetime
+#Libreria para establecer una zona horaria
 import pytz
+#libreria para obtener datos de fecha y hora
 import datetime
+#libreria para convertir el numero a letra
 from num2words import num2words
 
 
 class ReportePersonalizado(models.Model):
     _inherit = 'account.move'
+
+    #Creo funciones donde concentro la informacion de la compañia para luego mostrarlo.
 
     def _companyLetraMayuscula(self):
         company = self.company_id.name
@@ -53,6 +58,8 @@ class ReportePersonalizado(models.Model):
         register = self.company_id.company_registry
         return register
 
+    # Se crea la funcion de convertir el numero a letra donde toma datos de la libreria agregada.
+
     def _total_en_letra(self):
         pre = float(self.amount_total)
         text = ''
@@ -64,6 +71,8 @@ class ReportePersonalizado(models.Model):
         text += ' punto '
         text += num2words(decimal_num, lang='es')
         return text.upper()
+
+    #Defino una fecha y hora para obtener el valor en una variable y mostrarse en el documento.
 
     def _fecha_actual(self):
         tz = pytz.timezone('America/Mexico_City')
