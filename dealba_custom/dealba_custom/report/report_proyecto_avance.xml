@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="report_proyecto_avance">
+        <div style="padding-left: 15px; background: cadetblue;">
+            <span style="color: white; font-size: 18px; ">Información del proyecto</span>
+        </div>
+        <div class="row" style="padding: 10px 0 0 15px;">
+            <div class="col-4">
+                <table>
+                    <tr>
+                        <td class="text-right" style="width: 35%; padding-right: 10px; font-weight: bold;">No. Parte</td>
+                        <td><span t-field="o.no_especificacion"/></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 35%; padding-right: 10px; font-weight: bold;">No. Especificación</td>
+                        <td><span t-field="o.num_especificacion"/></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 35%; padding-right: 10px; font-weight: bold;">Rev. Especificación</td>
+                        <td><span t-field="o.rev_especificacion"/></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-4">
+                <table>
+                    <tr>
+                        <td class="text-right" style="width: 35%; padding-right: 10px; font-weight: bold;">Cliente</td>
+                        <td><span t-field="o.partner_id"/></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 35%; padding-right: 10px; font-weight: bold;">OEM</td>
+                        <td><span t-field="o.oem"/></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 35%; padding-right: 10px; font-weight: bold;">Líder de proyecto</td>
+                        <td><span t-field="o.user_id"/></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-4">
+                <table>
+                    <tr>
+                        <td class="text-right" style="width: 35%; padding-right: 10px; font-weight: bold;">Fecha inicio</td>
+                        <td><span t-field="o.fch_inicio"/></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 35%; padding-right: 10px; font-weight: bold;">Fecha finalización</td>
+                        <td><span t-field="o.fch_fin"/></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" style="width: 35%; padding-right: 10px; font-weight: bold;">Semanas</td>
+                        <td><span t-field="o.semanas"/></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div style="margin-top: 50px; padding-left: 15px; background: cadetblue;">
+            <span style="color: white; font-size: 18px; ">Hitos</span>
+        </div>
+        <div class="row" style="padding: 10px 0 0 15px;">
+            <div class="col-6">
+                <table class="table table-sm" style="width: 100%; text-align: center;">
+                    <thead style="background: dimgray; color: white;">
+                        <tr>
+                            <th>Hito</th>
+                            <th>Fch. Programada</th>
+                            <th>Status</th>
+                            <th>Fch. Real</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background: gainsboro;">
+                        <tr t-foreach="o.hito_ids" t-as="h">
+                            <td><span t-field="h.name"/></td>
+                            <td><span t-field="h.fch_programada"/></td>
+                            <td><span t-field="h.status"/></td>
+                            <td><span t-field="h.fch_real"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-3">
+                <canvas id="canvas_hito_donuts"/>
+            </div>
+            <div class="col-3">
+                <canvas id="canvas_hito_bar"/>
+            </div>
+        </div>
+        <div style="margin-top: 50px; padding-left: 15px; background: cadetblue;">
+            <span style="color: white; font-size: 18px; ">Fases y actividades</span>
+        </div>
+        <div style="padding: 10px 0 0 15px;">
+            <table class="table table-sm" style="width: 100%; text-align: center;">
+                <thead style="background: dimgray; color: white;">
+                    <tr>
+                        <th>Fase</th>
+                        <th>Elementos</th>
+                        <th>Actividades</th>
+                        <th>Fch. Cierre prog.</th>
+                        <th>Status</th>
+                        <th>Act. Cerradas</th>
+                        <th>Act. Restantes</th>
+                        <th>Act. Retrasadas</th>
+                        <th>% de Avance</th>
+                        <th>Acc. Abiertas</th>
+                        <th>Fch. Cierre real</th>
+                    </tr>
+                </thead>
+                <tbody style="background: gainsboro;">
+                    <tr t-foreach="o.detalle_fases()" t-as="f">
+                        <td><span t-esc="f[0]"/></td>
+                        <td><span t-esc="f[1]"/></td>
+                        <td><span t-esc="f[2]"/></td>
+                        <td><span t-esc="f[3]"/></td>
+                        <td><span t-esc="f[4]"/></td>
+                        <td><span t-esc="f[5]"/></td>
+                        <td><span t-esc="f[6]"/></td>
+                        <td><span t-esc="f[7]"/></td>
+                        <td><span t-esc="f[8]"/></td>
+                        <td><span t-esc="f[9]"/></td>
+                        <td><span t-esc="f[10]"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row" style="padding: 10px 0 0 15px;">
+            <t t-set="contador" t-value="1"/>
+            <t t-foreach="o.fase_ids.filtered(lambda x: x.estilo == 'titulo')" t-as="fase">
+                <div class="col-3">
+                    <canvas t-att-id="'canvas_fase_' + str(contador)"/>
+                </div>
+                <t t-set="contador" t-value="contador + 1"/>
+            </t>
+            <div class="col-3">
+                <canvas id="canvas_avance_proyecto"/>
+            </div>
+        </div>
+
+    </template>
+
+</odoo>

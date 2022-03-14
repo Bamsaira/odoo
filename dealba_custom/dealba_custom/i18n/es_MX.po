@@ -1,0 +1,43 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* dealba_custom
+#
+# Translators:
+# Eduardo Velaochaga <eduardo_velaochaga@yahoo.com>, 2021
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
+"PO-Revision-Date: 2020-09-07 08:17+0000\n"
+"Last-Translator: Eduardo Velaochaga <eduardo_velaochaga@yahoo.com>, 2021\n"
+"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: project
+#. openerp-web
+#: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__normal
+#: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__normal
+#, python-format
+msgid "In Progress"
+msgstr "G"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__done
+#, python-format
+msgid "Ready"
+msgstr "Y"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__blocked
+#: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__blocked
+#, python-format
+msgid "Blocked"
+msgstr "R"

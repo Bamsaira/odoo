@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+
+    <!-- Proveedor -->
+    <record id="proveedor_fase_1" model="project.task.type">
+        <field name="sequence">1</field>
+        <field name="name">Fase 1. Planificación y Definición</field>
+    </record>
+
+    <record id="proveedor_fase_2" model="project.task.type">
+        <field name="sequence">2</field>
+        <field name="name">Fase 2. Diseño y Desarrollo del Producto</field>
+    </record>
+
+    <record id="proveedor_fase_3" model="project.task.type">
+        <field name="sequence">3</field>
+        <field name="name">Fase 3. Diseño y Desarrollo del Proceso</field>
+    </record>
+
+    <record id="proveedor_fase_4" model="project.task.type">
+        <field name="sequence">4</field>
+        <field name="name">Fase 4. Validación del Producto y Proceso</field>
+    </record>
+
+    <record id="proveedor_fase_5" model="project.task.type">
+        <field name="sequence">5</field>
+        <field name="name">Fase 5. Verificación de la Producción</field>
+    </record>
+
+    <!-- Cliente -->
+    <record id="cliente_fase_1" model="project.task.type">
+        <field name="sequence">1</field>
+        <field name="name">Fase 1. Planificación y Definición</field>
+    </record>
+
+    <record id="cliente_fase_2" model="project.task.type">
+        <field name="sequence">2</field>
+        <field name="name">Fase 2. Diseño y Desarrollo del Proceso</field>
+    </record>
+
+    <record id="cliente_fase_3" model="project.task.type">
+        <field name="sequence">3</field>
+        <field name="name">Fase 3. Validación del Producto y Proceso</field>
+    </record>
+
+    <record id="cliente_fase_4" model="project.task.type">
+        <field name="sequence">4</field>
+        <field name="name">Fase 4. Verificación de la Producción</field>
+    </record>
+
+</odoo>

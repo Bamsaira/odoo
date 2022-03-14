@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+
+    <record id="inicio_proyecto_cron" model="ir.cron">
+        <field name="name">Marcar como iniciado proyecto según su fecha de inicio</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="model_project_project"/>
+        <field name="doall" eval="False"/>
+        <field name="state">code</field>
+        <field name="code">model.inicio_proyecto_cron()</field>
+    </record>
+
+    <record id="finalizar_proyecto_cron" model="ir.cron">
+        <field name="name">Marcar como finalizado proyecto según hitos</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="model_project_project"/>
+        <field name="doall" eval="False"/>
+        <field name="state">code</field>
+        <field name="code">model.finalizar_proyecto_cron()</field>
+    </record>
+
+    <record id="atrasado_proyecto_cron" model="ir.cron">
+        <field name="name">Marcar como atrasado proyecto según fecha finalización</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="model_id" ref="model_project_project"/>
+        <field name="doall" eval="False"/>
+        <field name="state">code</field>
+        <field name="code">model.atrasado_proyecto_cron()</field>
+    </record>
+
+</odoo>

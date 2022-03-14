@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="action_open_variacion" model="ir.actions.act_window">
+        <field name="name">Variaciones</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">variacion</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_mrp_configuration_variacion"
+              action="action_open_variacion"
+              parent="mrp.menu_mrp_configuration"
+              sequence="120"/>
+
+</odoo>

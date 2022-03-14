@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="mrp_workcenter_view_inherit_dealba_custom" model="ir.ui.view">
+        <field name="name">mrp.workcenter.view.inherit.dealba.custom</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="secuencia_id"/>
+                <field name="concatenar"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

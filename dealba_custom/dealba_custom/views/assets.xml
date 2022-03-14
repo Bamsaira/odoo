@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="assets_backend_inherit_dealba_custom" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/dealba_custom/static/src/js/state_selection_widget.js"/>
+            <script type="text/javascript" src="/dealba_custom/static/src/js/proyecto_avance.js"/>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"/>
+            <link rel="stylesheet" type="text/scss" href="/dealba_custom/static/src/scss/estilos.scss"/>
+        </xpath>
+    </template>
+
+</odoo>

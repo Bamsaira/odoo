@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="report_purchase_custom_action" model="ir.actions.report">
+        <field name="name">Formato Dealba</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dealba_custom.report_purchase_custom_template</field>
+        <field name="report_file">dealba_custom.report_purchase_custom_template</field>
+        <field name="print_report_name">('Compra - %s' % (object.name))</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_purchase_custom_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-3">
+                                <img t-attf-src="data:image/*;base64,{{o.company_id.logo}}" style="width: 100%; max-height: 247px;"/>
+                            </div>
+                            <div class="col-6" style="line-height: 13px; font-size: 11px;">
+                                <center>
+                                    <div style="padding-top: 20px;">
+                                        <span style="font-size: 15px; font-weight: bold;">BENEFICIADORA DE ALAMBRES Y METALES, S.A. DE C.V.</span>
+                                    </div>
+                                    <div style="padding-top: 15px;">
+                                        <span style="font-size: 16px">SALAMANCA No. 1126 CIUDAD INDUSTRIAL</span>
+                                    </div>
+                                    <div style="padding-top: 5px;">
+                                        <span style="font-size: 16px">C.P. 36541 IRAPUATO, GUANAJUATO</span>
+                                    </div>
+                                    <div style="padding-top: 5px;">
+                                        <span style="font-size: 16px">R.F.C. BAM 781020 1G0</span>
+                                    </div>
+                                    <div style="padding-top: 5px;">
+                                        <span style="font-size: 16px">Tel. +52 (462) 622 51 86</span>
+                                    </div>
+                                </center>
+                                <div class="row" style="padding: 15px 15px 0 15px;">
+                                    <div class="col-6">
+                                        <span style="font-size: 16px">mguerra@tornillo.com.mx</span>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <span style="font-size: 16px">www.dealba.com.mx</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3" style="border: solid; border-radius: 10px; border-width: 2px;">
+                                <div>
+                                    <center>
+                                        <span style="font-size: 13px; display: block; font-weight: bold; margin-top: 6%;}">ORDEN DE COMPRA /</span>
+                                        <span style="font-size: 13px; display: block; font-weight: bold;}">PURCHASE ORDER</span>
+                                    </center>
+                                </div>
+                                <div style="padding-top: 5px;">
+                                    <span style="font-size: 13px;">No.</span>
+                                    <span style="width: 70%; text-align: center; display: inline-block;">
+                                        <span t-esc="o.name" style="font-size: 18px !important; font-weight: bold; font-size: 15px; color: red;"/>
+                                    </span>
+                                </div>
+                                <div style="padding-top: 5px;">
+                                    <center>
+                                        <span style="font-size: 13px; display: block; font-weight: bold;}">REQUISICIÓN / REQUISITION</span>
+                                    </center>
+                                </div>
+                                <div style="padding-top: 5px;">
+                                    <span style="font-size: 13px;">No.</span>
+                                </div>
+                                <div style="padding-top: 5px;">
+                                    <center>
+                                        <div>
+                                            <span style="font-size: 13px; display: block; font-weight: bold;}">FECHA / DATE</span>
+                                        </div>
+                                        <div>
+                                            <span t-field="o.date_order"/>
+                                        </div>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <div style="border: solid; border-radius: 10px; margin: 0; border-width: 2px;">
+                            <div class="row" style="padding-top:10px">
+                                <div class="col-3">
+                                    <span style="font-size: 15px; font-weight: bold; padding-left: 20px;">COMPAÑIA / COMPANY</span>
+                                </div>
+                                <div class="col-9">
+                                    <span t-esc="o.partner_id.name.upper()"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <span style="font-size: 15px; font-weight: bold; padding-left: 20px;">DIRECCIÓN / ADDRESS</span>
+                                </div>
+                                <div class="col-9">
+                                    <span t-if="o.partner_id.street_name" t-esc="o.partner_id.street_name.upper()"/><br/>
+                                    <span t-if="o.partner_id.l10n_mx_edi_colony" t-esc="o.partner_id.l10n_mx_edi_colony.upper()"/>
+                                    <span t-if="o.partner_id.zip" style="padding-left: 15px;">C.P. <t t-esc="o.partner_id.zip.upper()"/></span>
+                                    <span t-if="o.partner_id.city" style="padding-left: 15px;"><t t-esc="o.partner_id.city.upper()"/>,</span>
+                                    <span t-if="o.partner_id.state_id" t-esc="o.partner_id.state_id.name.upper()"/><br/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <span style="font-size: 15px; font-weight: bold; padding-left: 20px;">ATENCIÓN / AT´N</span>
+                                </div>
+                                <div class="col-9">
+                                    <span>*** COLOCAR DATA ***</span>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-bottom: 10px">
+                                <div class="col-3">
+                                    <span style="font-size: 15px; font-weight: bold; padding-left: 20px;">TELEFONO / PHONE</span>
+                                </div>
+                                <div class="col-3">
+                                    <span t-if="o.partner_id.phone" t-esc="o.partner_id.phone.upper()"/>
+                                </div>
+                                <div class="col-3">
+                                    <span style="font-size: 15px; font-weight: bold;">PROVEEDOR / SUPPLIER No.</span>
+                                </div>
+                                <div class="col-3">
+                                    <span>*** COLOCAR DATA ***</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="border: solid; border-radius: 10px; margin: 0; border-width: 2px; margin-top: 20px">
+                            <div>
+                                <span style="font-size: 15px; font-weight: bold; padding-left: 20px;">ENTREGAR EN / DELIVERY ADDRESS</span>
+                            </div>
+                            <div class="row" style="border-bottom: solid; margin: 0; border-width: 2px;">
+                                <div class="col-12">
+                                    <center>
+                                        <span style="font-size: 15px; font-weight: bold;">*** COLOCAR DATA ***</span>
+                                    </center>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6" style="border-right: solid; margin: 0; border-width: 2px;">
+                                    <center>
+                                        <div>
+                                            <span style="font-size: 15px; font-weight: bold; padding-left: 20px;">TIPO TRANSPORTE / TRASPORTATION</span>
+                                        </div>
+                                        <div>
+                                            <span style="font-size: 15px; font-weight: bold;">*** COLOCAR DATA ***</span>
+                                        </div>
+                                    </center>
+                                </div>
+                                <div class="col-6">
+                                    <center>
+                                        <div>
+                                            <span style="font-size: 15px; font-weight: bold; padding-left: 20px;">CONDICIONES PAGO / PAYMENT CONDITIONS</span>
+                                        </div>
+                                        <div>
+                                            <span style="font-size: 15px; font-weight: bold;">*** COLOCAR DATA ***</span>
+                                        </div>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="border: solid; border-radius: 10px; margin: 0; border-width: 2px; margin-top: 20px">
+                            <table style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%;"></th>
+                                        <th style="width: 10%; text-align: center;">CANTIDAD</th>
+                                        <th style="width: 10%; text-align: center;">UNIDAD</th>
+                                        <th style="width: 10%; text-align: center;">CODIGO</th>
+                                        <th style="width: 35%; text-align: center;">DESCRIPCIÓN</th>
+                                        <th style="width: 10%; text-align: center;">PRECIO</th>
+                                        <th style="width: 10%; text-align: center;">FECHA</th>
+                                        <th style="width: 10%; text-align: center;">IMPORTE</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="border-bottom: 2px solid; width: 5%;"></th>
+                                        <th style="border-bottom: 2px solid; width: 10%; text-align: center;">QUANTITY</th>
+                                        <th style="border-bottom: 2px solid; width: 10%; text-align: center;">UNIT</th>
+                                        <th style="border-bottom: 2px solid; width: 10%; text-align: center;">ITEM</th>
+                                        <th style="border-bottom: 2px solid; width: 35%; text-align: center;">DESCRIPTION</th>
+                                        <th style="border-bottom: 2px solid; width: 10%; text-align: center;">PRICE</th>
+                                        <th style="border-bottom: 2px solid; width: 10%; text-align: center;">ENTREGA</th>
+                                        <th style="border-bottom: 2px solid; width: 10%; text-align: center;">AMOUNT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="contador" t-value="1"/>
+                                    <tr t-foreach="o.order_line" t-as="l">
+                                        <td style="font-size: 13px; text-align: center;"><t t-esc="contador"/></td>
+                                        <td style="font-size: 13px; text-align: center;"><t t-esc="'{:.3f}'.format(l.product_qty)"/></td>
+                                        <td style="font-size: 13px; text-align: center;"><t t-esc="l.product_uom.name"/></td>
+                                        <td style="font-size: 13px; text-align: center;"><t t-esc="l.product_id.default_code"/></td>
+                                        <td style="font-size: 13px; text-align: center;"><t t-esc="l.product_id.name"/></td>
+                                        <td class="text-right" style="font-size: 13px; text-align: center; padding-right: 10px"><t t-esc="'{:.2f}'.format(l.price_unit)"/></td>
+                                        <td style="font-size: 13px; text-align: center;">*** DATA ***</td>
+                                        <td class="text-right" style="font-size: 13px; text-align: center; padding-right: 10px;"><t t-esc="'{:.2f}'.format(l.price_subtotal)"/></td>
+                                        <t t-set="contador" t-value="contador + 1"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="margin-top: 20px;">
+                            <div class="row" style="padding-right: 13px;">
+                                <div class="col-8">
+
+                                </div>
+                                <div class="col-4" style="border: solid; border-radius: 10px; border-width: 2px;">
+                                    <table style="width: 100%;">
+                                        <tbody>
+                                            <tr>
+                                                <td>SUBTOTAL</td>
+                                                <td class="text-right"><span t-field="o.amount_untaxed"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td>IVA</td>
+                                                <td class="text-right"><span t-field="o.amount_tax"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td>TOTAL</td>
+                                                <td class="text-right"><span t-field="o.amount_total"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="border: solid; border-radius: 10px; margin: 0; border-width: 2px; margin-top: 20px">
+                            <div>
+                                <span style="font-size: 15px; font-weight: bold; padding-left: 20px;">COMENTARIOS / COMMENTS</span>
+                            </div>
+                            <div>
+                                <span style="font-size: 15px; font-weight: bold; padding-left: 20px;" t-field="o.notes"/>
+                            </div>
+                        </div>
+
+                        <div style="border: solid; border-radius: 10px; margin: 0; border-width: 2px; margin-top: 20px">
+                            <div class="row">
+                                <div class="col-6" style="border-right: solid; border-width: 2px;">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <div>
+                                                <span style="padding-left: 20px;">PARA USARSE EN</span>
+                                            </div>
+                                            <div>
+                                                <span style="padding-left: 20px;">TO BE USED FOR</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-7">
+                                            <span style="padding-left: 20px;">*** COLOCAR DATA ***</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <div>
+                                                <span>NIVEL DE AUTORIZACIÓN REQUERIDO</span>
+                                            </div>
+                                            <div>
+                                                <span>AUTHORIZED LEVEL REQUIRED</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <span style="padding-right: 10px">** DATA **</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="border: solid; border-radius: 10px; margin: 0; border-width: 2px; margin-top: 20px">
+                            <div class="row">
+                                <div class="col-6" style="border-right: solid; border-width: 2px;">
+                                    <div>
+                                        <span style="padding-left: 20px;">AUTORIZACIONES / AUTHORIZATIONS</span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div>
+                                                <span style="padding-left: 20px;">1.</span>
+                                                <span style="padding-left: 20px;">*** DATA ***</span>
+                                            </div>
+                                            <div>
+                                                <span style="padding-left: 20px;">3.</span>
+                                                <span style="padding-left: 20px;">*** DATA ***</span>
+                                            </div>
+                                            <div>
+                                                <span style="padding-left: 20px;">5.</span>
+                                                <span style="padding-left: 20px;">*** DATA ***</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div>
+                                                <span>2.</span>
+                                                <span style="padding-left: 20px;">*** DATA ***</span>
+                                            </div>
+                                            <div>
+                                                <span>4.</span>
+                                                <span style="padding-left: 20px;">*** DATA ***</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <center>
+                                        <div>
+                                            <span>TODO ASUNTO RELACIONADO CON ÉSTA ORDEN DEBERÁ TRABAJARSE CON</span>
+                                        </div>
+                                        <div>
+                                            <br/><span style="padding-top: 50px !important;">*** DATA ***</span>
+                                        </div>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="report_purchase_custom_paperformat" model="report.paperformat">
+        <field name="name">Reporte compras Dealba</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">50</field>
+        <field name="margin_bottom">32</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">45</field>
+        <field name="dpi">90</field>
+        <field name="report_ids" eval="[(6,0,[ref('dealba_custom.report_purchase_custom_action')])]"/>
+    </record>
+
+</odoo>

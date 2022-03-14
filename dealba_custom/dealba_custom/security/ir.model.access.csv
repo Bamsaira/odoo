@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_project_project_partner,access_project_project_partner,model_project_project_partner,base.group_user,1,1,1,1
+access_project_project_product,access_project_project_product,model_project_project_product,base.group_user,1,1,1,1
+access_project_task_accion,access_project_task_accion,model_project_task_accion,base.group_user,1,1,1,1
+access_project_project_fase,access_project_project_fase,model_project_project_fase,base.group_user,1,1,1,1
+access_project_project_accion,access_project_project_accion,model_project_project_accion,base.group_user,1,1,1,1
+access_project_project_hito,access_project_project_hito,model_project_project_hito,base.group_user,1,1,1,1
+access_project_project_minuta,access_project_project_minuta,model_project_project_minuta,base.group_user,1,1,1,1
+
+access_variacion,access_variacion,model_variacion,base.group_user,1,1,1,1
