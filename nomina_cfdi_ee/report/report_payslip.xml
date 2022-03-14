@@ -373,7 +373,7 @@
                     Total:
                   </td>
                   <td class="text-right">
-                    <span t-esc="(total_percepciones + total_otros_pagos - total_deducciones)" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                    <span t-esc="(total_percepciones + total_otros_pagos- total_deducciones)" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                   </td>
                 </tr>
                 <tr class="border-black">
@@ -381,7 +381,7 @@
                     Neto a pagar:
                   </td>
                   <td class="text-right">
-                    <span t-esc="(total_percepciones + total_otros_pagos - total_deducciones)" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                    <span t-esc="neto_pagar" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                   </td>
                 </tr>
               </table>

@@ -488,7 +488,8 @@ class HrPayslip(models.Model):
                             else:
                                aux = (number_of_days + vac_days)/ 5
                          else:
-                            number_of_days -= 1
+                            if not nvo_ingreso:
+                               number_of_days -= 1
                             if contract.incapa_sept_dia:
                                aux = (number_of_days + inc_days + vac_days) / 6
                             else:
