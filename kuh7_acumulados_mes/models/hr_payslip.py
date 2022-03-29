@@ -20,7 +20,7 @@ class HrPayslip(models.Model):
             date_start = mes_actual.dia_inicio  # self.date_from
             date_end = mes_actual.dia_fin  # self.date_to
 
-            domain = [('state', '=', 'done')]
+            domain = [('state', '=', ['done', 'draft'])]
             if date_start:
                 domain.append(('date_from', '>=', date_start))
             if date_end:
@@ -63,7 +63,7 @@ class HrPayslip(models.Model):
             date_start = mes_actual.dia_inicio  # self.date_from
             date_end = mes_actual.dia_fin  # self.date_to
 
-            domain = [('state', '=', 'done')]
+            domain = [('state', '=', ['done', 'draft'])]
             if date_start:
                 domain.append(('date_from', '>=', date_start))
             if date_end:
@@ -74,7 +74,7 @@ class HrPayslip(models.Model):
             # if not self.contract_id.calc_isr_extra:
             domain.append(('tipo_nomina', '=', 'O'))
 
-            rules = self.env['hr.salary.rule'].search([('code', '=', 'ISR2')])
+            rules = self.env['hr.salary.rule'].search([('code', '=', 'ISR5')])
             payslips = self.env['hr.payslip'].search(domain)
             payslip_lines = payslips.mapped('line_ids').filtered(lambda x: x.salary_rule_id.id in rules.ids)
             employees = {}
