@@ -6,6 +6,7 @@ import requests
 from odoo import fields, models,api, _
 from odoo.exceptions import UserError
 from datetime import datetime, timedelta
+from dateutil import parser
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
@@ -41,7 +42,9 @@ class ResCompany(models.Model):
                    ('607', _('Régimen de Enajenación o Adquisición de Bienes')),
                    ('629', _('De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales')),
                    ('630', _('Enajenación de acciones en bolsa de valores')),
-                   ('615', _('Régimen de los ingresos por obtención de premios')),],
+                   ('615', _('Régimen de los ingresos por obtención de premios')),
+                   ('625', _('Régimen de las Actividades Empresariales con ingresos a través de Plataformas Tecnológicas')),
+                   ('626', _('Régimen Simplificado de Confianza')),],
         string=_('Régimen Fiscal'), 
     )
     archivo_cer = fields.Binary(string=_('Archivo .cer'))
@@ -53,9 +56,10 @@ class ResCompany(models.Model):
     saldo_timbres =  fields.Float(string=_('Saldo de timbres'), readonly=True)
     saldo_alarma =  fields.Float(string=_('Alarma timbres'), default=10)
     correo_alarma =  fields.Char(string=_('Correo de alarma'))
-    fecha_csd = fields.Datetime(string=_('Vigencia CSD'), readonly=True)
+    fecha_csd = fields.Datetime(string=_('Vigencia CSD',readonly=True))
     estado_csd =  fields.Char(string=_('Estado CSD'), readonly=True)
     aviso_csd =  fields.Char(string=_('Aviso vencimiento (días antes)'), default=14)
+    fecha_timbres = fields.Date(string=_('Vigencia timbres'), readonly=True)
 
     @api.model
     def get_saldo_by_cron(self):
@@ -71,8 +75,17 @@ class ResCompany(models.Model):
                     if email:
                         email_template.send_mail(company.id, force_send=True,email_values={'email_to':email})
             if company.aviso_csd and company.fecha_csd and company.correo_alarma: #valida vigencia de CSD
-                if datetime.today() + timedelta(days=1) > company.fecha_csd: 
+                if datetime.today() - timedelta(days=int(company.aviso_csd)) > company.fecha_csd:
                    email_template = self.env.ref("cdfi_invoice.email_template_alarma_de_csd",False)
+                   if not email_template:return
+                   emails = company.correo_alarma.split(",")
+                   for email in emails:
+                       email = email.strip()
+                       if email:
+                          email_template.send_mail(company.id, force_send=True,email_values={'email_to':email})
+            if company.fecha_timbres and company.correo_alarma: #valida vigencia de timbres
+                if (datetime.today() + timedelta(days=7)).date() > company.fecha_timbres:
+                   email_template = self.env.ref("cdfi_invoice.email_template_alarma_vencimiento",False)
                    if not email_template:return
                    emails = company.correo_alarma.split(",")
                    for email in emails:
@@ -114,7 +127,8 @@ class ResCompany(models.Model):
         if json_response.get('saldo'):
             xml_saldo = base64.b64decode(json_response['saldo'])
         values2 = {
-                    'saldo_timbres': xml_saldo
+                    'saldo_timbres': xml_saldo,
+                    'fecha_timbres': parser.parse(json_response['vigencia']) if json_response['vigencia'] else '',
                   }
         self.update(values2)
 
@@ -147,7 +161,7 @@ class ResCompany(models.Model):
 
         respuesta = json_response['respuesta']
         if json_response['respuesta'] == 'Certificados CSD correctos':
-           self.fecha_csd = datetime.strptime(json_response['fecha'], '%d-%b-%Y %H:%M:%S')  # 17-Jun-2023 20:40:51
+           self.fecha_csd = parser.parse(json_response['fecha'])
            values2 = {
                'fecha_csd': self.fecha_csd,
                'estado_csd': json_response['respuesta'],

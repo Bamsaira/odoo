@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
 
         <!--Email template -->
         <record id="email_template_payment" model="mail.template">
@@ -56,6 +56,21 @@ El saldo de timbres es menor al monto seleccionado. Por favor contacte a su prov
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
 La vigencia de tus certificados CSD está próxima, genera tus nuevos certificados y cámbialos en la configuración de la compañía.
+]]></field>
+        </record>
+
+        <record id="email_template_alarma_vencimiento" model="mail.template">
+            <field name="name">Alarma de vencimiento de timbres</field>
+            <field name="email_from">${(object.email and '%s &lt;%s&gt;' % (object.name, object.email) or '')|safe}</field>
+            <field name="subject">Ref: Alarma de vencimiento de timbres</field>
+            <!-- <field name="partner_to">${object.partner_id.id}</field> -->
+            <field name="model_id" ref="base.model_res_company"/>
+            <field name="auto_delete" eval="True"/>
+            <!-- <field name="report_template" ref="report_payments"/>
+            <field name="report_name">${object.name.replace('/', '_') + '.pdf'}</field> -->
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+La vigencia de tus timbres está próxima, para mantener vigentes tus timbres debes comprar un nuevo paquete, contacta a tu distribuidor de timbres.
 ]]></field>
         </record>
 
