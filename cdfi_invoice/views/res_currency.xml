@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="base.view_currency_form" />
             <field name="arch" type="xml">
                 <field name="decimal_places" position="after">
-                    <group cols="4" string="Factura CFDI">
+                    <group cols="4" string="Factura CFDI 4.0">
                        <field name="no_decimales" />
                        <field name="no_decimales_tc" />
                     </group>

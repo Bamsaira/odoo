@@ -229,12 +229,8 @@ class AccountPayment(models.Model):
                                          })
                            key = traslado['tax_id']
 
-                           basep = basedr / equivalenciadr
-                           importep = importedr / equivalenciadr
-                           if str(basep)[::-1].find('.') > 6:
-                              basep = payment.truncate(basep, decimal_p)
-                           if str(importep)[::-1].find('.') > 6:
-                              importep = payment.truncate(importep, decimal_p)
+                           basep = payment.truncate(basedr / equivalenciadr, decimal_p)
+                           importep = payment.truncate(importedr / equivalenciadr, decimal_p)
 
                            val = {'BaseP': basep,
                                   'ImpuestoP': traslado['impuesto'],
@@ -261,9 +257,7 @@ class AccountPayment(models.Model):
                                          })
                            key = retencion['tax_id']
 
-                           importep = importedr / equivalenciadr
-                           if str(importep)[::-1].find('.') > 6:
-                              importep = payment.truncate(importep, decimal_p)
+                           importep = payment.truncate(importedr / equivalenciadr, decimal_p)
 
                            val = {'ImpuestoP': retencion['impuesto'],
                                   'ImporteP': importep,}
@@ -581,7 +575,7 @@ class AccountPayment(models.Model):
                                             })
                 report = self.env['ir.actions.report']._get_report_from_name('cdfi_invoice.report_payment')
                 report_data = report._render_qweb_pdf([p.id])[0]
-                pdf_file_name = p.name.replace('.','').replace('/', '_') + '.pdf'
+                pdf_file_name = p.name.replace('/', '_') + '.pdf'
                 self.env['ir.attachment'].sudo().create(
                                             {
                                                 'name': pdf_file_name,
@@ -697,10 +691,9 @@ class AccountPayment(models.Model):
                 domain = [
                      ('res_id', '=', p.id),
                      ('res_model', '=', p._name),
-                     ('name', '=', p.name.replace('.','').replace('/', '_') + '.xml')]
+                     ('name', '=', p.name.replace('/', '_') + '.xml')]
                 xml_file = self.env['ir.attachment'].search(domain)[0]
-                if not xml_file:
-                    raise UserError(_('No se encontró el archivo XML para enviar a cancelar.'))
+
                 values = {
                           'rfc': p.company_id.vat,
                           'api_key': p.company_id.proveedor_timbrado,
@@ -738,7 +731,7 @@ class AccountPayment(models.Model):
                 if json_response['estado_factura'] == 'problemas_factura':
                     raise UserError(_(json_response['problemas_message']))
                 elif json_response.get('factura_xml', False):
-                    file_name = 'CANCEL_' + p.name.replace('.','').replace('/', '_') + '.xml'
+                    file_name = 'CANCEL_' + p.name.replace('/', '_') + '.xml'
                     self.env['ir.attachment'].sudo().create(
                                                 {
                                                     'name': file_name,

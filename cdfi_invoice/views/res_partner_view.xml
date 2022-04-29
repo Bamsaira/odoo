@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <page name="info_cdfi" string="CFDI">
+                    <page name="info_cdfi" string="CFDI 4.0">
                             <group cols="4">
                                 <group string="Preferencias de factura">
                                     <field name="uso_cfdi"/>

@@ -18,7 +18,7 @@
                     </button>
                     <xpath expr="//sheet" position="inside">
                         <notebook >
-                            <page name="info_cdfi" string="CFDI" attrs="{'invisible':[('state','!=','posted')]}">
+                            <page name="info_cdfi" string="CFDI 4.0" attrs="{'invisible':[('state','!=','posted')]}">
                                     <group cols="4">
                                         <group string="Datos del comprobante">
                                             <field name="forma_pago" attrs="{'readonly': [('estado_pago','!=','pago_no_enviado')]}"/>

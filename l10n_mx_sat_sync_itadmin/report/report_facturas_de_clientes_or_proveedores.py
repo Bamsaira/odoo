@@ -81,7 +81,6 @@ class Reportfacturas_de_clientes(models.AbstractModel):
     
     @api.model
     def l10n_mx_edi_get_xml_etree(self, cfdi=None):
-        cfdi = base64.decodebytes(cfdi)
         return fromstring(cfdi) if cfdi else None
     
     @api.model
@@ -104,7 +103,7 @@ class Reportfacturas_de_clientes(models.AbstractModel):
         #get the xslt path
         xslt_path = CFDI_XSLT_CADENA_TFD
         #get the cfdi as eTree
-        #cfdi = base64.decodebytes(self.l10n_mx_edi_cfdi)
+        #cfdi = base64.decodestring(self.l10n_mx_edi_cfdi)
         cfdi = self.l10n_mx_edi_get_xml_etree(cfdi)
         cfdi = self.l10n_mx_edi_get_tfd_etree(cfdi)
         #return the cadena
@@ -118,7 +117,7 @@ class Reportfacturas_de_clientes(models.AbstractModel):
             'data': data,
             'docs': self.env['ir.attachment'].browse(docids),
             'time': time,
-            #'base64': base64,
+            'base64': base64,
             'round': round,
             'get_tax_amount': self.get_tax_amount,
             'l10n_mx_edi_amount_to_text': self.l10n_mx_edi_amount_to_text,
