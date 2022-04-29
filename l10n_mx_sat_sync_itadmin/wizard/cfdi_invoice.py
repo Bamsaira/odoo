@@ -235,20 +235,20 @@ class CfdiInvoiceAttachment(models.TransientModel):
                 raise Warning("Factura ya existente con ese UUID %s"%(vendor_uuid))
 
         if customer_reference != '':
-            invoice_exist = invoice_obj.search([('ref','=',customer_reference), ('move_type','=', 'out_invoice')],limit=1)
+            invoice_exist = invoice_obj.search([('ref','=',customer_reference), ('type','=', 'out_invoice')],limit=1)
             if invoice_exist:
                 customer_reference = ''
 #                raise Warning("Factura ya existente con la referencia del vendedor %s"%(customer_reference))
 
         ctx = self._context.copy()
-        ctx.update({'default_type': 'out_invoice', 'move_type': 'out_invoice'})
+        ctx.update({'default_type': 'out_invoice', 'type': 'out_invoice'})
         partner = self.create_update_partner(partner_data)
         if not journal:
             journal = invoice_obj.with_context(ctx)._default_journal()
         #journal = invoice_obj.with_context(ctx)._default_journal()
 
         invoice_vals = {
-            'move_type':'out_invoice',
+            'type':'out_invoice',
             'partner_id':partner.id,
             'ref':customer_reference,
             'folio_fiscal':timbrado_data.get('@UUID'),
@@ -424,7 +424,7 @@ class CfdiInvoiceAttachment(models.TransientModel):
                 raise Warning("Factura ya existente con ese UUID %s"%(vendor_uuid))
 
         if vendor_reference != '':
-            invoice_exist = invoice_obj.search([('ref','=',vendor_reference), ('move_type','=', 'in_invoice')],limit=1)
+            invoice_exist = invoice_obj.search([('ref','=',vendor_reference), ('type','=', 'in_invoice')],limit=1)
             if invoice_exist:
                 vendor_reference = ''
                 #raise Warning("Factura ya existente con la referencia del vendedor %s"%(vendor_reference))
@@ -432,12 +432,12 @@ class CfdiInvoiceAttachment(models.TransientModel):
         vendor = self.create_update_partner(vendor_data, is_customer=False, is_supplier=True)
 
         ctx = self._context.copy()
-        ctx.update({'default_type': 'in_invoice', 'move_type': 'in_invoice'})
+        ctx.update({'default_type': 'in_invoice', 'type': 'in_invoice'})
         if not journal:
             journal = invoice_obj.with_context(ctx)._default_journal()
             
         invoice_vals = {
-            'move_type':'in_invoice',
+            'type':'in_invoice',
             'partner_id':vendor.id,
             'ref':vendor_reference,
             'folio_fiscal':timbrado_data.get('@UUID'),
@@ -613,13 +613,13 @@ class CfdiInvoiceAttachment(models.TransientModel):
                 raise Warning("Factura ya existente con ese UUID %s"%(vendor_uuid))
 
         if customer_reference != '':
-            invoice_exist = invoice_obj.search([('ref','=',customer_reference), ('move_type','=', 'out_refund')],limit=1)
+            invoice_exist = invoice_obj.search([('ref','=',customer_reference), ('type','=', 'out_refund')],limit=1)
             if invoice_exist:
                 customer_reference = ''
 #                raise Warning("Factura ya existente con la referencia del vendedor %s"%(customer_reference))
 
         ctx = self._context.copy()
-        ctx.update({'default_type': 'out_refund', 'move_type': 'out_refund'})
+        ctx.update({'default_type': 'out_refund', 'type': 'out_refund'})
 
         partner = self.create_update_partner(partner_data)
         if not journal:
@@ -627,7 +627,7 @@ class CfdiInvoiceAttachment(models.TransientModel):
         #journal = invoice_obj.with_context(ctx)._default_journal()
 
         invoice_vals = {
-            'move_type':'out_refund',
+            'type':'out_refund',
             'partner_id':partner.id,
             'ref':customer_reference,
             'folio_fiscal':timbrado_data.get('@UUID'),
@@ -750,7 +750,7 @@ class CfdiInvoiceAttachment(models.TransientModel):
                 invoice_vals.pop('line_ids')
         invoice_exist = invoice_obj.with_context(ctx).create(invoice_vals)
         
-        #invoice_exist.compute_taxes()
+        invoice_exist.compute_taxes()
         action = self.env.ref('account.action_move_out_refund_type')
         result = action.read()[0]
         res = self.env.ref('account.view_move_form', False)
@@ -803,7 +803,7 @@ class CfdiInvoiceAttachment(models.TransientModel):
                 raise Warning("Factura ya existente con ese UUID %s"%(purchase_uuid))
 
         if vendor_reference != '':
-            invoice_exist = invoice_obj.search([('ref','=',vendor_reference), ('move_type','=', 'in_refund')],limit=1)
+            invoice_exist = invoice_obj.search([('ref','=',vendor_reference), ('type','=', 'in_refund')],limit=1)
             if invoice_exist:
                 vendor_reference = ''
                 #raise Warning("Factura ya existente con la referencia del vendedor %s"%(vendor_reference))
@@ -812,7 +812,7 @@ class CfdiInvoiceAttachment(models.TransientModel):
         vendor = self.create_update_partner(vendor_data, is_customer=False, is_supplier=True)
         
         ctx = self._context.copy()
-        ctx.update({'default_type': 'in_refund', 'move_type': 'in_refund',})
+        ctx.update({'default_type': 'in_refund', 'type': 'in_refund',})
         
         invoice_fields = invoice_obj._fields.keys()
         invoice_vals = invoice_obj.default_get(invoice_fields)
@@ -821,7 +821,7 @@ class CfdiInvoiceAttachment(models.TransientModel):
         #journal = invoice_obj.with_context(ctx)._default_journal()
         
         invoice_vals.update({
-            'move_type':'in_refund',
+            'type':'in_refund',
             'partner_id':vendor.id,
             'ref':vendor_reference,
             'folio_fiscal':timbrado_data.get('@UUID'),

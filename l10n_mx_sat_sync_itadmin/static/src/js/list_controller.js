@@ -9,21 +9,21 @@ ListController.include({
 		if (this.modelName==='ir.attachment' && !this.noLeaf){
 			var context = this.model.get(this.handle, {raw: true}).getContext();
 			if (context.is_fiel_attachment!==undefined && context.is_fiel_attachment==true){
-				if (this.$buttons.find(".o_list_button_discard").length){
+				if (this.$buttons.find(".o_button_import").length){
 					
 					var $import_button = $("<button type='button' class='btn btn-default btn-sm o_list_button_importar_xml_fiel_invoice_from_sat' accesskey='xml'>Importar XML</button>");
-					this.$buttons.find(".o_list_button_discard").after($import_button);
+					this.$buttons.find(".o_button_import").after($import_button);
 					this.$buttons.on('click', '.o_list_button_importar_xml_fiel_invoice_from_sat', this._onClickImportarXML.bind(this));
 					
 					var $import_button = $("<button type='button' class='btn btn-default btn-sm o_list_button_descarga_x_dia_fiel_invoice_from_sat' accesskey='dia'>Descarga Dia</button>");
-					this.$buttons.find(".o_list_button_discard").after($import_button);
+					this.$buttons.find(".o_button_import").after($import_button);
 					this.$buttons.on('click', '.o_list_button_descarga_x_dia_fiel_invoice_from_sat', this._onClickDescargaXDia.bind(this));
 					
 					/*var $import_button = $("<button type='button' class='btn btn-default btn-sm o_list_button_reconcile_fiel_invoice_from_sat' accesskey='if'>Conciliar</button>");
 					this.$buttons.find(".o_list_button_discard").after($import_button);
 					this.$buttons.on('click', '.o_list_button_reconcile_fiel_invoice_from_sat', this._onReconcileFIELSatInvoice.bind(this));*/
 					var $import_button = $("<button type='button' class='btn btn-default btn-sm o_list_button_import_fiel_invoice_from_sat' accesskey='if'>Sincronizar SAT</button>");
-					this.$buttons.find(".o_list_button_discard").after($import_button);
+					this.$buttons.find(".o_button_import").after($import_button);
 					this.$buttons.on('click', '.o_list_button_import_fiel_invoice_from_sat', this._onImportFIELSatInvoice.bind(this));
 					
 					var $import_button = $("<button type='button' class='btn btn-default btn-sm o_list_button_sincronizar_documentos_fiel_invoice_from_sat' accesskey='xml'>Sincronizar documentos</button>");

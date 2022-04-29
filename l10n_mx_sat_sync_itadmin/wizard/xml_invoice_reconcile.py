@@ -121,7 +121,7 @@ class XMLInvoiceReconcile(models.TransientModel):
             if payment.amount != self.amount:
                 raise Warning('El total de la factura y el XML son distintos')
             payment.write({'folio_fiscal': self.folio_fiscal,
-                           #'uso_cfdi' : self.uso_cfdi,
+                           'uso_cfdi' : self.uso_cfdi,
                            #'l10n_mx_edi_cfdi_name' : self.attachment_id.store_fname,
                            })
             self.attachment_id.write({'creado_en_odoo':True, 'payment_ids':[(6,0, [payment.id])], 'res_id': payment.id, 'res_model': payment._name,})
