@@ -270,6 +270,7 @@ class HrPayslipRun(models.Model):
                       payslip.action_cfdi_nomina_generate()
                 except Exception as e:
                    pass
+            self.env.cr.commit()
         return
 
     def confirmar_nomina(self):
