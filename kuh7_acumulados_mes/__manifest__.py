@@ -7,7 +7,7 @@
     ''',
     "website": "http://kuh7.mx",
     'author': 'Kuh7 Soluciones S.A. de C.V.',
-    'version': '1.2',
+    'version': '1.1',
     'category': 'payslip',
     'depends': [
         'nomina_cfdi_ee'
