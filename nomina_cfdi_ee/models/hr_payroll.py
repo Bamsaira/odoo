@@ -1151,7 +1151,7 @@ class HrPayslip(models.Model):
                       'nombre_fiscal': self.company_id.nombre_fiscal.upper(),
                 },
                 'receptor': {
-                      'rfc': self.employee_id.vat,
+                      'rfc': self.employee_id.rfc,
                       'nombre': self.employee_id.name.upper(),
                       'uso_cfdi': self.uso_cfdi,
                       'RegimenFiscalReceptor': '605',
