@@ -8,13 +8,6 @@ class ResConfigSettings(models.TransientModel):
     def _selection_product_type(self):
         product_obj = self.env['product.product']
         return product_obj._fields.get('type')._description_selection(product_obj.env)
-    
-    @api.model
-    def default_get(self, fields):
-        res = super(ResConfigSettings, self).default_get(fields)
-        if not res.get('product_type_default'):
-            res['product_type_default'] = 'consu'
-        return res
 
     l10n_mx_esignature_ids = fields.Many2many(related='company_id.l10n_mx_esignature_ids', 
         string='MX E-signature', readonly=False)

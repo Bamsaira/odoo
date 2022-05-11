@@ -144,7 +144,7 @@ class IrAttachment(models.Model):
                                           'selo_sat': '',
                                           'tipocambio': '',
                                           'moneda': '',
-                                          'folio_factura': '',
+                                          'folio': '',
                                           'estado_factura': 'factura_no_generada'})
             if attach.payment_ids:
                 attach.payment_ids.write({'attachment_id' : False,
@@ -159,7 +159,7 @@ class IrAttachment(models.Model):
                                           'selo_sat': '',
                                           'tipocambio': '',
                                           'moneda': '',
-                                          'folio_factura': '',})
+                                          'folio': '',})
             vals = {'res_id':False, 'res_model':False}
             if attach.creado_en_odoo:
                 vals.update({'creado_en_odoo':False})
