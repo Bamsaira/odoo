@@ -305,12 +305,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-set="seguro" t-value="0"/>
                             <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip and line.category_id.code in ['ALW3'])" t-as="line">
                               <!--<t t-if= "line.total > 0">-->
-                                <t t-if="line.code == 'P032'">
-                                    <t t-set="seguro" t-value="line.amount"/>
-                                </t>
                                 <t t-set="total_otros_pagos" t-value="total_otros_pagos + line.total"/>
                                 <td height="0"><span t-field="line.name"/></td>
                                 <td height="0" class="text-right"> <span t-esc="line.total"
@@ -377,7 +373,7 @@
                     Total:
                   </td>
                   <td class="text-right">
-                    <span t-esc="(total_percepciones + total_otros_pagos- total_deducciones - seguro)" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                    <span t-esc="(total_percepciones + total_otros_pagos- total_deducciones)" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                   </td>
                 </tr>
                 <tr class="border-black">
@@ -385,7 +381,7 @@
                     Neto a pagar:
                   </td>
                   <td class="text-right">
-                    <span t-esc="(total_percepciones + total_otros_pagos- total_deducciones - seguro)" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                    <span t-esc="neto_pagar" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                   </td>
                 </tr>
               </table>
