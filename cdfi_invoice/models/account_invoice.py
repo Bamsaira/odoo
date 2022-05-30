@@ -198,12 +198,19 @@ class AccountMove(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
-        if self.estado_factura == 'factura_correcta' or self.estado_factura == 'factura_cancelada':
-            default['estado_factura'] = 'factura_no_generada'
-            default['folio_fiscal'] = ''
-            default['fecha_factura'] = None
-            default['factura_cfdi'] = False
-            default['edi_document_ids'] = None
+        default['estado_factura'] = 'factura_no_generada'
+        default['folio_fiscal'] = ''
+        default['fecha_factura'] = None
+        default['factura_cfdi'] = False
+        default['fecha_factura'] = None
+        default['qrcode_image'] = None
+        default['numero_cetificado'] = None
+        default['cetificaso_sat'] = None
+        default['selo_digital_cdfi'] = None
+        default['fecha_factura'] = None
+        default['folio_fiscal'] = None
+        default['invoice_datetime'] = None
+        default['edi_document_ids'] = None
         return super(AccountMove, self).copy(default=default)
 
     @api.depends('name')
@@ -252,10 +259,17 @@ class AccountMove(models.Model):
 
     @api.model
     def to_json(self):
-        if self.partner_id.vat == 'XAXX010101000' and self.factura_global:
-            nombre = 'PUBLICO EN GENERAL'
+        self.check_cfdi_values()
+
+        if self.partner_id.vat == 'XAXX010101000' or self.partner_id.vat == 'XEXX010101000':
+            zipreceptor = self.journal_id.codigo_postal or self.company_id.zip
+            if self.factura_global:
+                nombre = 'PUBLICO EN GENERAL'
+            else:
+                nombre = self.partner_id.name.upper()
         else:
             nombre = self.partner_id.name.upper()
+            zipreceptor = self.partner_id.zip
 
         no_decimales = self.currency_id.no_decimales
         no_decimales_prod = self.currency_id.decimal_places
@@ -282,8 +296,6 @@ class AccountMove(models.Model):
         else:
             tipocambio = self.set_decimals(1 / self.currency_id.with_context(date=self.invoice_date).rate,
                                            no_decimales_tc)
-
-        self.check_cfdi_values()
 
         request_params = {
             'factura': {
@@ -315,7 +327,7 @@ class AccountMove(models.Model):
                 'NumRegIdTrib': self.partner_id.registro_tributario,
                 'UsoCFDI': self.uso_cfdi,
                 'RegimenFiscalReceptor': self.partner_id.regimen_fiscal,
-                'DomicilioFiscalReceptor': self.partner_id.zip,
+                'DomicilioFiscalReceptor': zipreceptor,
             },
             'informacion': {
                 'cfdi': '4.0',
@@ -529,9 +541,9 @@ class AccountMove(models.Model):
                     traslados.append({'impuesto': tax.impuesto,
                                       'TipoFactor': tax.tipo_factor,
                                       'tasa': tasa_tr,
-                                      'importe': self.set_decimals(line['amount'],
+                                      'importe': self.roundTraditional(line['amount'],
                                                                    no_decimales) if tax.tipo_factor != 'Exento' else '',
-                                      'base': self.set_decimals(line['base'], no_decimales),
+                                      'base': self.roundTraditional(line['base'], no_decimales),
                                       'tax_id': line['tax_id'],
                                       })
                 impuestos.update(
@@ -542,8 +554,8 @@ class AccountMove(models.Model):
                     retenciones.append({'impuesto': tax.impuesto,
                                         'TipoFactor': tax.tipo_factor,
                                         'tasa': self.set_decimals(float(tax.amount) / 100.0 * -1, 6),
-                                        'importe': self.set_decimals(line['amount'] * -1, no_decimales),
-                                        'base': self.set_decimals(line['base'], no_decimales),
+                                        'importe': self.roundTraditional(line['amount'] * -1, no_decimales),
+                                        'base': self.roundTraditional(line['base'], no_decimales),
                                         'tax_id': line['tax_id'],
                                         })
                 impuestos.update(
@@ -553,30 +565,30 @@ class AccountMove(models.Model):
 
         if tax_local_ret or tax_local_tras:
             if tax_local_tras and not tax_local_ret:
-                request_params.update({'implocal10': {'TotaldeTraslados': self.set_decimals(tax_local_tras_tot, 2),
-                                                      'TotaldeRetenciones': self.set_decimals(tax_local_ret_tot, 2),
+                request_params.update({'implocal10': {'TotaldeTraslados': self.roundTraditional(tax_local_tras_tot, 2),
+                                                      'TotaldeRetenciones': self.roundTraditional(tax_local_ret_tot, 2),
                                                       'TrasladosLocales': tax_local_tras, }})
             if tax_local_ret and not tax_local_tras:
-                request_params.update({'implocal10': {'TotaldeTraslados': self.set_decimals(tax_local_tras_tot, 2),
-                                                      'TotaldeRetenciones': self.set_decimals(tax_local_ret_tot * -1,
+                request_params.update({'implocal10': {'TotaldeTraslados': self.roundTraditional(tax_local_tras_tot, 2),
+                                                      'TotaldeRetenciones': self.roundTraditional(tax_local_ret_tot * -1,
                                                                                               2),
                                                       'RetencionesLocales': tax_local_ret, }})
             if tax_local_ret and tax_local_tras:
-                request_params.update({'implocal10': {'TotaldeTraslados': self.set_decimals(tax_local_tras_tot, 2),
-                                                      'TotaldeRetenciones': self.set_decimals(tax_local_ret_tot * -1,
+                request_params.update({'implocal10': {'TotaldeTraslados': self.roundTraditional(tax_local_tras_tot, 2),
+                                                      'TotaldeRetenciones': self.roundTraditional(tax_local_ret_tot * -1,
                                                                                               2),
                                                       'TrasladosLocales': tax_local_tras,
                                                       'RetencionesLocales': tax_local_ret, }})
 
         if self.tipo_comprobante == 'T':
-            request_params['factura'].update({'subtotal': '0.00', 'total': '0.00'})
+            request_params['factura'].update({'descuento': '', 'subtotal': '0.00','total': '0.00'})
             self.total_factura = 0
         else:
             self.total_factura = round(
                 self.subtotal + tras_tot - ret_tot - self.discount + tax_local_ret_tot + tax_local_tras_tot, 2)
-            request_params['factura'].update({'descuento': self.set_decimals(self.discount, no_decimales),
-                                              'subtotal': self.set_decimals(self.subtotal, no_decimales),
-                                              'total': self.set_decimals(self.total_factura, no_decimales)})
+            request_params['factura'].update({'descuento': self.roundTraditional(self.discount, no_decimales),
+                                              'subtotal': self.roundTraditional(self.subtotal, no_decimales),
+                                              'total': self.roundTraditional(self.total_factura, no_decimales)})
 
         request_params.update({'conceptos': invoice_lines})
 
@@ -608,6 +620,10 @@ class AccountMove(models.Model):
             self.write({'proceso_timbrado': False})
             self.env.cr.commit()
             raise UserError(_('El receptor no tiene RFC configurado.'))
+        if not self.partner_id.name:
+            self.write({'proceso_timbrado': False})
+            self.env.cr.commit()
+            raise UserError(_('El receptor no tiene nombre configurado.'))
         if not self.uso_cfdi:
             self.write({'proceso_timbrado': False})
             self.env.cr.commit()
@@ -803,7 +819,7 @@ class AccountMove(models.Model):
                         'contrasena': invoice.company_id.contrasena,
                     },
                     'xml': xml_file[0].datas.decode("utf-8"),
-                    'motivo': self.env.context.get('motivo_cancelacion', False),
+                    'motivo': self.env.context.get('motivo_cancelacion', '02'),
                     'foliosustitucion': self.env.context.get('foliosustitucion', ''),
                 }
                 if self.company_id.proveedor_timbrado == 'multifactura':
@@ -1006,7 +1022,7 @@ class AccountMove(models.Model):
 
             foreign_currency = self.currency_id if self.currency_id != self.company_id.currency_id else False
             if foreign_currency and partial.debit_currency_id == foreign_currency:
-                amount_mxn = partial.amount * self.currency_id.with_context(date=self.invoice_date).rate
+                amount_mxn = partial.amount * self.currency_id.with_context(date=counterpart_line.date).rate
             else:
                 amount_mxn = partial.amount
 
