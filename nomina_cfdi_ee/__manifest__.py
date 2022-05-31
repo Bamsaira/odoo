@@ -13,7 +13,7 @@
         'om_hr_payroll',
     ],
     'data': [
-        'security/security.xml',
+        #'security/security.xml',
         'security/ir.model.access.csv',
         'wizard/reason_cancelation_sat_view.xml',
         'data/sequence_data.xml',
