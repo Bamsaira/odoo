@@ -7,13 +7,15 @@
     Nomina CFDI Module
     ''',
     'author': 'IT Admin',
-    'version': '14.07',
+    'version': '14.13',
     'category': 'Employees',
     'depends': [
         'om_hr_payroll',
     ],
     'data': [
         'security/security.xml',
+        'security/ir.model.access.csv',
+        'wizard/reason_cancelation_sat_view.xml',
         'data/sequence_data.xml',
         'data/cron.xml',
         'data/nomina.otropago.csv',
@@ -28,7 +30,6 @@
         'report/report_payslip.xml',
         'views/res_bank_view.xml',
         'data/mail_template_data.xml',
-        'security/ir.model.access.csv',
         'data/res.bank.csv',
         'views/menu.xml',
         'views/horas_extras_view.xml',

@@ -78,6 +78,7 @@ class Employee(models.Model):
     sueldo_utilidad =  fields.Float(string=_('Sueldo para cálculo de Utilidad'))
     fecha_utilidad_inicio = fields.Date(readonly=True)
     fecha_utilidad_fin = fields.Date(readonly=True)
+    domicilio_receptor = fields.Char("Código postal (SAT)")
 
     @api.onchange('registro_patronal')
     def _check_registro_length(self):
