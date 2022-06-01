@@ -29,7 +29,7 @@ class HrPayslip(models.Model):
             domain.append(('employee_id', '=', self.employee_id.id))
 
             # if not self.contract_id.calc_isr_extra:
-            domain.append(('tipo_nomina', '=', 'O'))
+            # domain.append(('tipo_nomina', '=', 'O'))
 
             rules = self.env['hr.salary.rule'].search([('code', '=', 'TPERG')])
             payslips = self.env['hr.payslip'].search(domain)
@@ -72,7 +72,7 @@ class HrPayslip(models.Model):
             domain.append(('employee_id', '=', self.employee_id.id))
 
             # if not self.contract_id.calc_isr_extra:
-            domain.append(('tipo_nomina', '=', 'O'))
+            # domain.append(('tipo_nomina', '=', 'O'))
 
             rules = self.env['hr.salary.rule'].search([('code', '=', 'ISR5')])
             payslips = self.env['hr.payslip'].search(domain)
